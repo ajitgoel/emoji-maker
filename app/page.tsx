@@ -20,7 +20,7 @@ export default function Home() {
         body: JSON.stringify({ prompt }),
       });
       
-      const data = await response.json();
+      await response.json();
       
       // Refresh the emoji grid after successful generation
       if (emojiGridRef.current) {

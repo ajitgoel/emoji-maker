@@ -50,7 +50,7 @@ export function useEmojis() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [supabase]);
 
   async function fetchEmojis() {
     try {
@@ -68,8 +68,7 @@ export function useEmojis() {
 
   const toggleLike = async (emojiId: number, currentLikes: number) => {
     try {
-      // Get the emoji
-      const { data: emoji } = await supabase
+      await supabase
         .from('emojis')
         .select('likes_count')
         .eq('id', emojiId)
@@ -79,7 +78,7 @@ export function useEmojis() {
       const newLikesCount = currentLikes > 0 ? 0 : 1;
 
       // Update in database
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('emojis')
         .update({ likes_count: newLikesCount })
         .eq('id', emojiId)
