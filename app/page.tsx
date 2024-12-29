@@ -6,6 +6,7 @@ interface EmojiData {
   url: string;
   likes: number;
   id: string;
+  isLiked: boolean;
 }
 
 export default function Home() {
@@ -30,7 +31,8 @@ export default function Home() {
       const newEmojis = data.output.map((url: string) => ({
         url,
         likes: 0,
-        id: Math.random().toString(36).substr(2, 9)
+        id: Math.random().toString(36).substr(2, 9),
+        isLiked: false
       }));
       
       setEmojis(prevEmojis => [...newEmojis, ...prevEmojis]);
@@ -45,7 +47,13 @@ export default function Home() {
   const handleLike = (id: string) => {
     setEmojis(prevEmojis =>
       prevEmojis.map(emoji =>
-        emoji.id === id ? { ...emoji, likes: emoji.likes + 1 } : emoji
+        emoji.id === id 
+          ? {
+              ...emoji,
+              isLiked: !emoji.isLiked,
+              likes: emoji.isLiked ? emoji.likes - 1 : emoji.likes + 1
+            }
+          : emoji
       )
     );
   };
@@ -121,7 +129,17 @@ export default function Home() {
                           className="p-2 rounded-full bg-white hover:bg-white/90 transition-colors"
                           aria-label="Like emoji"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="20" 
+                            height="20" 
+                            viewBox="0 0 24 24" 
+                            fill={emoji.isLiked ? "#ef4444" : "none"}
+                            stroke={emoji.isLiked ? "#ef4444" : "black"}
+                            strokeWidth="2" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"
+                          >
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                           </svg>
                         </button>
