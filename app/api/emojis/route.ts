@@ -12,7 +12,6 @@ export async function GET() {
       .from('emojis')
       .select('*')
       .order('created_at', { ascending: false });
-    console.log(emojis);
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

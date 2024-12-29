@@ -41,6 +41,8 @@ export async function POST(req: Request) {
     if (finalPrediction.status === 'failed') {
       throw new Error('Prediction failed');
     }
+    
+    console.log('finalPrediction: ' + finalPrediction);
 
     // Upload generated image to Supabase storage
     const imageUrl = await uploadEmojiToStorage(finalPrediction.output[0], userId);
