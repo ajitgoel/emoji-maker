@@ -33,7 +33,7 @@ bucket
   - Add the image url to te "emojis" data-table as "image_url", and creator_user_id to be the actual user_id 
 3. Display all images in emojigrid
   - Emoji grid should fetch and display all images from "emojis" data-table
-  - when a new emoji is generated, the emojigrid should be updated automatically to add the new emoji-to-the-grid 
+  - when a new emoji is generated, the emojigrid should be updated automatically to add the new emoji to the grid 
 4. Likes interaction
   - When user check on 'like' button, the num_likes should increase on the 'emojis table,
   - when user un-check 'like' button, the num likes should decrease on the 'emojis table

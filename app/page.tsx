@@ -1,6 +1,7 @@
 'use client';
 import Image from "next/image";
 import { useState } from "react";
+import { EmojiGrid } from "@/components/EmojiGrid";
 
 interface EmojiData {
   url: string;
@@ -12,7 +13,6 @@ interface EmojiData {
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [emojis, setEmojis] = useState<EmojiData[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,50 +28,12 @@ export default function Home() {
       });
       
       const data = await response.json();
-      const newEmojis = data.output.map((url: string) => ({
-        url,
-        likes: 0,
-        id: Math.random().toString(36).substr(2, 9),
-        isLiked: false
-      }));
       
-      setEmojis(prevEmojis => [...newEmojis, ...prevEmojis]);
     } catch (error) {
       console.error('Error generating emoji:', error);
     } finally {
       setIsLoading(false);
       setPrompt('');
-    }
-  };
-
-  const handleLike = (id: string) => {
-    setEmojis(prevEmojis =>
-      prevEmojis.map(emoji =>
-        emoji.id === id 
-          ? {
-              ...emoji,
-              isLiked: !emoji.isLiked,
-              likes: emoji.isLiked ? emoji.likes - 1 : emoji.likes + 1
-            }
-          : emoji
-      )
-    );
-  };
-
-  const handleDownload = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = 'emoji.png';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error('Error downloading emoji:', error);
     }
   };
 
@@ -100,67 +62,7 @@ export default function Home() {
             </form>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 w-full">
-            {emojis.length > 0 ? (
-              emojis.map((emoji) => (
-                <div key={emoji.id} className="flex flex-col">
-                  <div className="relative group aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    <Image
-                      src={emoji.url}
-                      alt="Generated emoji"
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50">
-                      <div className="flex gap-2">
-                        <button 
-                          onClick={() => handleDownload(emoji.url)}
-                          className="p-2 rounded-full bg-white hover:bg-white/90 transition-colors"
-                          aria-label="Download emoji"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="7 10 12 15 17 10"/>
-                            <line x1="12" y1="15" x2="12" y2="3"/>
-                          </svg>
-                        </button>
-                        <button 
-                          onClick={() => handleLike(emoji.id)}
-                          className="p-2 rounded-full bg-white hover:bg-white/90 transition-colors"
-                          aria-label="Like emoji"
-                        >
-                          <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            width="20" 
-                            height="20" 
-                            viewBox="0 0 24 24" 
-                            fill={emoji.isLiked ? "#ef4444" : "none"}
-                            stroke={emoji.isLiked ? "#ef4444" : "black"}
-                            strokeWidth="2" 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round"
-                          >
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500 mt-2 text-center">
-                    {emoji.likes} {emoji.likes === 1 ? 'like' : 'likes'}
-                  </div>
-                </div>
-              ))
-            ) : (
-              // Placeholder skeleton loading states
-              Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="flex flex-col">
-                  <div className="aspect-square bg-gray-100 rounded-lg animate-pulse" />
-                  <div className="h-4 bg-gray-100 rounded mt-2 w-16 mx-auto animate-pulse" />
-                </div>
-              ))
-            )}
-          </div>
+          <EmojiGrid />
         </div>
       </main>
     </div>
