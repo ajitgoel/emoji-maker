@@ -1,10 +1,24 @@
+import { forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useEmojis } from '@/hooks/useEmojis';
 import Image from 'next/image';
-import { useState } from "react";
 
-export function EmojiGrid() {
-  const { emojis, loading, toggleLike } = useEmojis();
-  console.log(emojis);
+interface EmojiGridProps {
+  onRefresh?: () => void;
+}
+
+export const EmojiGrid = forwardRef<{ refreshEmojis: () => Promise<void> }, EmojiGridProps>((props, ref) => {
+  const { emojis, loading, toggleLike, refreshEmojis } = useEmojis();
+
+  useImperativeHandle(ref, () => ({
+    refreshEmojis
+  }));
+
+  useEffect(() => {
+    if (props.onRefresh) {
+      props.onRefresh();
+    }
+  }, [props.onRefresh]);
+
   if (loading) {
     return <div>Loading emojis...</div>;
   }
@@ -58,7 +72,7 @@ export function EmojiGrid() {
                   </svg>
                 </button>
                 <button 
-                  onClick={() => handleLike(emoji.id, emoji.likes_count)}
+                  onClick={() => handleLike(emoji.id, emoji.likes_count ?? 0)}
                   className="p-2 rounded-full bg-white hover:bg-white/90 transition-colors"
                   aria-label="Like emoji"
                 >
@@ -67,8 +81,8 @@ export function EmojiGrid() {
                     width="20" 
                     height="20" 
                     viewBox="0 0 24 24" 
-                    fill={emoji.likes_count > 0 ? "#ef4444" : "none"}
-                    stroke={emoji.likes_count > 0 ? "#ef4444" : "black"}
+                    fill={(emoji.likes_count ?? 0) ? "#ef4444" : "none"}
+                    stroke={(emoji.likes_count ?? 0) ? "#ef4444" : "black"}
                     strokeWidth="2" 
                     strokeLinecap="round" 
                     strokeLinejoin="round"
@@ -87,4 +101,4 @@ export function EmojiGrid() {
       ))}
     </div>
   );
-}
+});

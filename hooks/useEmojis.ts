@@ -18,6 +18,11 @@ export function useEmojis() {
   const [emojis, setEmojis] = useState<Emoji[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClientComponentClient<Database>();
+  
+  const refreshEmojis = async () => {
+    await fetchEmojis();
+  };
+
   useEffect(() => {
     // Initial fetch
     fetchEmojis();
@@ -92,5 +97,5 @@ export function useEmojis() {
     }
   };
 
-  return { emojis, loading, toggleLike };
+  return { emojis, loading, toggleLike, refreshEmojis };
 }
