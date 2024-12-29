@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import type { Database } from '@/types/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 export {};  // Makes this file a module
 
@@ -14,10 +13,14 @@ interface Emoji {
   likes_count: number | null;
   prompt: string;
 }
+
 export function useEmojis() {
   const [emojis, setEmojis] = useState<Emoji[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   
   const refreshEmojis = async () => {
     await fetchEmojis();
