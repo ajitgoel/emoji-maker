@@ -24,17 +24,19 @@ created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() );
 
 #  Requirements
 1. Create user to user table
-1. After a user signin via clerk, we should get the userId from clerk, and check if this userId exist in 'profiles' - table, matching "user_id"
-2. if the user doesnt exist, then create a user in 'profiles' table
-3. if the user exist already, then proceed, and pass on user_id to functions like generate emojis
-2. Upload emoji to "emojis" supabase storage bucket;
-1. When user generating an emoji, upload the emoji image file returned from Replicate to supabase "emojis" storage
+  - After a user signin via clerk, we should get the userId from clerk, and check if this userId exist in 'profiles' - table, matching "user_id"
+  - if the user doesnt exist, then create a user in 'profiles' table
+  - if the user exist already, then proceed, and pass on user_id to functions like generate emojis
+2. Upload emoji to "emojis" supabase storage bucket
+  - When user generating an emoji, upload the emoji image file returned from Replicate to supabase "emojis" storage
 bucket
-2. Add the image url to te "emojis" data-table as "image_url", and creator_user_id to be the actual user_id 3. Display all images in emojigrid
-1. Emoji grid should fetch and display all images from "emojis" data-table
-2. when a new emoji is generated, the emojigrid should be updated automatically to add the new emoji-to-the-grid 4. Likes interaction
-1. When user check on 'like' button, the num_likes should increase on the 'emojis table,
-2. when user un-check 'like' button, the num likes should decrease on the 'emojis table
+  - Add the image url to te "emojis" data-table as "image_url", and creator_user_id to be the actual user_id 
+3. Display all images in emojigrid
+  - Emoji grid should fetch and display all images from "emojis" data-table
+  - when a new emoji is generated, the emojigrid should be updated automatically to add the new emoji-to-the-grid 
+4. Likes interaction
+  - When user check on 'like' button, the num_likes should increase on the 'emojis table,
+  - when user un-check 'like' button, the num likes should decrease on the 'emojis table
 
 # Documentation
 ## Example of uploading files to supabase storage 
