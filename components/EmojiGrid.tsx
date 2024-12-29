@@ -6,18 +6,20 @@ interface EmojiGridProps {
   onRefresh?: () => void;
 }
 
-export const EmojiGrid = forwardRef<{ refreshEmojis: () => Promise<void> }, EmojiGridProps>((props, ref) => {
+const EmojiGrid = forwardRef<{ refreshEmojis: () => Promise<void> }, EmojiGridProps>((props, ref) => {
   const { emojis, loading, toggleLike, refreshEmojis } = useEmojis();
 
   useImperativeHandle(ref, () => ({
     refreshEmojis
   }));
 
+  const { onRefresh } = props;
+
   useEffect(() => {
-    if (props.onRefresh) {
-      props.onRefresh();
+    if (onRefresh) {
+      onRefresh();
     }
-  }, [props.onRefresh]);
+  }, [onRefresh]);
 
   if (loading) {
     return <div>Loading emojis...</div>;
@@ -48,7 +50,7 @@ export const EmojiGrid = forwardRef<{ refreshEmojis: () => Promise<void> }, Emoj
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {emojis.map((emoji) => (
         <div key={emoji.id} className="flex flex-col group">
-          <div key={emoji.id} className="relative aspect-square w-full h-full min-h-[200px]">
+          <div className="relative aspect-square w-full h-full min-h-[200px]">
             <Image
               src={emoji.image_url}
               alt={emoji.prompt}
@@ -102,3 +104,7 @@ export const EmojiGrid = forwardRef<{ refreshEmojis: () => Promise<void> }, Emoj
     </div>
   );
 });
+
+EmojiGrid.displayName = 'EmojiGrid';
+
+export default EmojiGrid;

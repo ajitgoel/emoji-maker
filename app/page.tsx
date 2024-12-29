@@ -1,13 +1,6 @@
 'use client';
 import { useState, useRef } from "react";
-import { EmojiGrid } from "@/components/EmojiGrid";
-
-interface EmojiData {
-  url: string;
-  likes: number;
-  id: string;
-  isLiked: boolean;
-}
+import EmojiGrid  from "@/components/EmojiGrid";
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -40,15 +33,7 @@ export default function Home() {
       setPrompt('');
     }
   };
-  type RefreshFunction = () => void;
-  const setRefreshFunction = (refreshFn: () => Promise<void>) => {
-    if (emojiGridRef.current) { // Check if ref is already initialized
-      emojiGridRef.current.refreshEmojis = refreshFn;
-    } else {
-      emojiGridRef.current = { refreshEmojis: refreshFn };
-    }
-  };
-  
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -70,8 +55,8 @@ export default function Home() {
                 className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
               >
               {isLoading ? 'Generating...' : 'Generate'}
-            </button>
-          </form>
+              </button>
+            </form>
           </div>
           <EmojiGrid ref={emojiGridRef} />
         </div>
